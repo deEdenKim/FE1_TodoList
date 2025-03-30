@@ -8,15 +8,17 @@
   </head>
   <body>
     <h1>나의 첫 번째 투두 리스트</h1>
-    <ul id="todoList">
-      <input type="text" id="todoInput" placeholder="할 일을 입력하세요" />
-      <button id="addTodo">추가</button>
-      <li class="complete">HTML 공부하기</li>
-      <li class="complete">CSS 배우기</li>
-      <li class="complete">JavaScript 배우기</li>
-    </ul>
 
+    <!-- 날짜 선택 -->
+    <input type="date" id="datePicker" />
+
+    <!-- 할 일 입력 -->
+    <input type="text" id="todoInput" placeholder="할 일을 입력하세요" />
+    <button id="addTodo">추가</button>
     <button id="darkMode">다크모드</button>
+
+    <!-- 할 일 목록 -->
+    <ul id="todoList"></ul>
+    <script src="js/script.js"></script>
   </body>
-  <script src="js/script.js"></script>
 </html>
