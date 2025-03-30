@@ -13,8 +13,8 @@ odo.addEventListener("click", function () {
 });
 */
 
-let button = document.querySelector("#darkMode");
-button.addEventListener("click", function () {
+let darkButton = document.querySelector("#darkMode");
+darkButton.addEventListener("click", function () {
   document.body.classList.toggle("dark");
 });
 
@@ -24,31 +24,56 @@ let input = document.querySelector("#todoInput");
 // 추가 버튼
 let addButton = document.querySelector("#addTodo");
 
-//할 일 목록. 존재하는 모든 <li> 요소에 이벤트 추가
-let existingTodos = document.querySelectorAll("#todoList li");
-existingTodos.forEach(function (todo) {
-  todo.addEventListener("click", function () {
-    todo.classList.toggle("done");
-  });
+let todoList = document.querySelector("#addTodo");
+
+let datePicker = document.querySelector("#datePicker");
+
+//날짜별 투두 저장 객체
+let todoData = {}; //2025-02-21: [밥 먹기, 운동하기]
+let selectDate = null;
+
+//날짜 선택시 변경
+datePicker.addEventListener("change", function () {
+  selectedDate = this.value;
+  renderTodosForDate();
 });
 
+//할일 추가 변경
 addButton.addEventListener("click", function () {
-  let newTodoText = input.value; //입력한 값 가져오기
-
-  if (newTodoText.trim() === "") {
-    alert("할 일을 입력하세요!"); //빈 입력 방지
+  let newTodoText = input.value.trim();
+  if (!selectedDate) {
+    alert("날짜를 먼저 선택하세요!");
+    return;
+  }
+  if (newTodoText === "") {
+    alert("할 일을 입력하세요");
     return;
   }
 
-  let newTodo = document.createElement("li"); //새로운 <li>요소 생성
-  newTodo.textContent = newTodoText; //입력한 값을 <li>에 추가
-  newTodo.classList.add("complete");
+  //해당 날자에 데이터가 없으면 배열 생성
+  if (!todoData[selectedDate]) {
+    todoData[selectedDate] = [];
+  }
 
-  //새로운 할 일을 클릭하면 완료 될 수 있도록, 이벤트 추가하기
-  newTodo.addEventListener("click", function () {
-    newTodo.classList.toggle("done");
-  });
-
-  todoList.appendChild(newTodo); //<ul>에 이렇게 새로 만든 <li>를 추가
-  input.value = ""; //입력창 비우기
+  //할 일 추가
+  todoData[selectedDate].push(newTodoText);
+  input.value = "";
+  renderTodosForDate();
 });
+
+//현재 날짜에 해당하는 할 일 렌더링
+function renderTodosForDate() {
+  todoList.innerHTML = "";
+
+  if (!selectedDate || !todoData[selectedDate]) return;
+
+  todoData[selectedDate].forEach((todoText, index) => {
+    let li = document.createElement("li");
+    li.textContent = todoText;
+
+    li.addEventListener("click", function () {
+      li.classList.toggle("done");
+    });
+    todoList.appendChild(li);
+  });
+}
